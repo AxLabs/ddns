@@ -3,8 +3,8 @@ version: '2'
 services:
   ddns:
     environment:
-      DDNS_DOMAIN: d.example.net                      # <<< ADJUST DOMAIN
-      DDNS_SOA_DOMAIN: ddns.example.net               # <<< ADJUST DOMAIN
+      DDNS_DOMAIN: ${DDNS_DOMAIN}
+      DDNS_SOA_DOMAIN: ${DDNS_SOA_DOMAIN}
       DDNS_EXPIRATION_DAYS: 10
 
   powerdns:
@@ -23,8 +23,8 @@ services:
     environment:
       ACME_AGREE: "true"
       DDNS_FRONTEND_HOST: ddns:8080
-      DDNS_CADDY_DOMAIN: ddns.example.net             # <<< ADJUST DOMAIN
-      DDNS_CADDY_TLS_EMAIL: changeme@example.net      # <<< INSERT EMAIL
+      DDNS_CADDY_DOMAIN: ${DDNS_CADDY_DOMAIN}
+      DDNS_CADDY_TLS_EMAIL: ${DDNS_CADDY_TLS_EMAIL}
     volumes:
       - "${PWD}/caddy/Caddyfile:/etc/Caddyfile"
       - "${PWD}/.caddy_mount:/root/.caddy"

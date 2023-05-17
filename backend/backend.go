@@ -1,10 +1,13 @@
 package backend
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/pboehm/ddns/shared"
+	"fmt"
 	"log"
 	"strings"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/pboehm/ddns/shared"
 )
 
 type Backend struct {
@@ -16,6 +19,28 @@ func NewBackend(config *shared.Config, lookup *HostLookup) *Backend {
 	return &Backend{
 		config: config,
 		lookup: lookup,
+	}
+}
+
+type DomainInfo struct {
+	Id             int      `json:"id"`
+	Zone           string   `json:"zone"`
+	Masters        []string `json:"masters"`
+	NotifiedSerial int      `json:"notified_serial"`
+	Serial         int      `json:"serial"`
+	LastCheck      int64    `json:"last_check"`
+	Kind           string   `json:"kind"`
+}
+
+func NewDomainInfo(config *shared.Config) *DomainInfo {
+	return &DomainInfo{
+		Id:             1,
+		Zone:           fmt.Sprintf("%s.", config.Domain),
+		Masters:        []string{},
+		NotifiedSerial: 2,
+		Serial:         2,
+		LastCheck:      time.Now().Unix(),
+		Kind:           "native",
 	}
 }
 
@@ -58,6 +83,15 @@ func (b *Backend) Run() error {
 	r.GET("/dnsapi/getAllDomainMetadata/:name", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"result": gin.H{"PRESIGNED": []string{"0"}},
+		})
+	})
+
+	r.GET("/dnsapi/getAllDomains", func(c *gin.Context) {
+
+		domainInfo := NewDomainInfo(b.config)
+
+		c.JSON(200, gin.H{
+			"result": []*DomainInfo{domainInfo},
 		})
 	})
 
