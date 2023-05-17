@@ -3,9 +3,10 @@ package backend
 import (
 	"errors"
 	"fmt"
-	"github.com/pboehm/ddns/shared"
 	"strings"
 	"time"
+
+	"github.com/pboehm/ddns/shared"
 )
 
 type Request struct {
@@ -68,7 +69,7 @@ func (l *HostLookup) Lookup(request *Request) (*Response, error) {
 		}
 
 	default:
-		return nil, errors.New("Invalid request")
+		return nil, errors.New("invalid request")
 	}
 
 	return &Response{QType: responseRecord, QName: request.QName, Content: responseContent, TTL: 5}, nil
@@ -84,7 +85,7 @@ func (l *HostLookup) extractHostname(rawQueryName string) (string, error) {
 	}
 
 	if hostname == "" {
-		return "", errors.New("Query name does not correspond to our domain")
+		return "", errors.New("query name does not correspond to our domain")
 	}
 
 	return hostname, nil
